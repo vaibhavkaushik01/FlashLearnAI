@@ -3,3 +3,19 @@ Three main features
 > pdf to quiz
 > pdf to flash cards
 
+Uploading pdf Problems
+
+Multer Cons
+> It will also use file system to store which is time comsuming.
+> Will slow down server in case of many files storage.cd
+
+Direct URL to model
+> Is not competible with google drive links.
+
+FS module in node
+> Have to provide an absolute path to the file so cannot work online.
+> Have to store file in backend and provide path to model to make it work online.
+
+For large files best strategy is to upload files on cloud and provide the url to model
+
+In my case max file size I am keeping is 20 mb and i have no cloud service available so I will go with multer.
