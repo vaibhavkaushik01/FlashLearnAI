@@ -208,7 +208,7 @@ export const QuizPage: React.FC = () => {
             <p className="text-lg text-gray-600 dark:text-gray-300">
               You scored {score} out of {mockQuiz.totalQuestions} questions correctly
             </p>
-          </div>
+          </div>  
 
           <div className="space-y-6">
             {mockQuiz.questions.map((question, index) => {
