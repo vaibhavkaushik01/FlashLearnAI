@@ -24,16 +24,18 @@ router.post("/quiz",upload.single('File'),async (req,res)=>{
               "ques1": {
                 "problem_statement": "Question text here",
                 "options": ["option1", "option2", "option3", "option4"],
-                "ans": "correct option here"
+                "ans": "correct option here",
+                "explaination":"why given ans is correct"
               },
               "ques2": {
                 "problem_statement": "Question text here",
                 "options": ["option1", "option2", "option3", "option4"],
-                "ans": "correct option here"
+                "ans": "correct option here",
+                "explaination":"why given ans is correct"
               }
             }
             Guidelines:
-                Generate 2 quiz questions only and only generate question from relevant and important topics.
+                Generate 5 quiz questions only and only generate question from relevant and important topics.
                 Don't mention that you are providing information from pdf in json and output should only contain json object nothing else.
                 Use only the information from the PDF to create the questions.
                 Each question must have exactly 4 options.
@@ -112,7 +114,7 @@ router.post("/flashcards",upload.single('File'),async (req,res)=>{
               }
             }
             Guidelines:
-                Generate 2  flashcards from relevant and important topics only.
+                Generate 5  flashcards from relevant and important topics only.
                 If a topic is large make different flash card for its subtopics.
                 Don't mention that you are providing information from pdf in json and output should only contain json object nothing else.
                 Use only the information from the PDF.
