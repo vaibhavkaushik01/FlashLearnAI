@@ -1,5 +1,6 @@
 import express from "express";
 import dotenv from "dotenv";
+import cors from "cors";
 
 import apiRoutes from "./apiRoutes/apiRoutes.js";
 
@@ -7,7 +8,8 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT;
-app.use(express.urlencoded({ extended: true }))
+app.use(express.urlencoded({ extended: true }));
+app.use(cors());
 
 app.get("/",(req,res)=>{
     res.send("FlashLearnAI Landing Page");
