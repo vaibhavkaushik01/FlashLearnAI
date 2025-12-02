@@ -1,11 +1,7 @@
 import React from 'react';
 import { Upload, Brain, FileText, Zap } from 'lucide-react';
 
-interface HomePageProps {
-  setActiveTab: (tab: string) => void;
-}
-
-export const HomePage: React.FC<HomePageProps> = ({ setActiveTab }) => {
+export const HomePage = ({ setActiveTab }) => {
   const features = [
     {
       icon: <Upload className="w-8 h-8" />,
@@ -104,29 +100,6 @@ export const HomePage: React.FC<HomePageProps> = ({ setActiveTab }) => {
           </div>
         </div>
       </div>
-
-      {/* Stats Section */}
-      {/* <div className="py-16 px-4 sm:px-6 lg:px-8 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm">
-        <div className="max-w-4xl mx-auto">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            {[
-              { number: '50K+', label: 'Documents Processed' },
-              { number: '95%', label: 'Accuracy Rate' },
-              { number: '10M+', label: 'Questions Generated' },
-              { number: '99%', label: 'User Satisfaction' }
-            ].map((stat, index) => (
-              <div key={index} className="transform hover:scale-105 transition-transform duration-300">
-                <div className="text-3xl font-bold bg-gradient-to-r from-blue-600 to-purple-700 bg-clip-text text-transparent">
-                  {stat.number}
-                </div>
-                <div className="text-sm text-gray-600 dark:text-gray-300 mt-1">
-                  {stat.label}
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </div> */}
     </div>
   );
 };

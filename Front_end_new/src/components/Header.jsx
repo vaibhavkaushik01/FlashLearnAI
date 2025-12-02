@@ -2,12 +2,7 @@ import React from 'react';
 import { Moon, Sun, BookOpen } from 'lucide-react';
 import { useTheme } from '../contexts/ThemeContext';
 
-interface HeaderProps {
-  activeTab: string;
-  setActiveTab: (tab: string) => void;
-}
-
-export const Header: React.FC<HeaderProps> = ({ activeTab, setActiveTab }) => {
+export const Header = ({ activeTab, setActiveTab }) => {
   const { theme, toggleTheme } = useTheme();
 
   const navItems = [

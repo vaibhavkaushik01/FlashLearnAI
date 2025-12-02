@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { ChevronLeft, ChevronRight, RotateCcw, Shuffle, Check, X } from 'lucide-react';
 
-export const FlashcardsPage: React.FC = () => {
+export const FlashcardsPage = ({flashCards}) => {
   const [currentCard, setCurrentCard] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
-  const [masteredCards, setMasteredCards] = useState<Set<number>>(new Set());
-  const [_studyMode, _setStudyMode] = useState<'study' | 'review'>('study');
+  const [masteredCards, setMasteredCards] = useState(new Set());
+  const [_studyMode, _setStudyMode] = useState('study');
 
-  const flashcards = [
+  let flashcards = [
     {
       front: "What is Machine Learning?",
       back: "Machine Learning is a subset of artificial intelligence that enables computers to learn and improve from experience without being explicitly programmed. It uses algorithms to identify patterns in data and make predictions or decisions.",
@@ -27,18 +27,13 @@ export const FlashcardsPage: React.FC = () => {
       front: "Define Overfitting",
       back: "Overfitting occurs when a machine learning model learns the training data too well, including noise and outliers, making it perform poorly on new, unseen data. It's characterized by high training accuracy but low validation accuracy.",
       category: "Model Performance"
-    },
-    {
-      front: "What is Feature Engineering?",
-      back: "Feature engineering is the process of selecting, modifying, or creating features (input variables) from raw data to improve machine learning model performance. It involves domain knowledge to transform data into a format that algorithms can better understand.",
-      category: "Data Processing"
-    },
-    {
-      front: "Explain Cross-Validation",
-      back: "Cross-validation is a technique for evaluating machine learning models by dividing the dataset into multiple subsets (folds), training on some folds and testing on others, then averaging the results to get a more reliable performance estimate.",
-      category: "Model Evaluation"
     }
   ];
+
+  if(flashCards && flashCards.length > 0){
+    console.log("Flashcards prop:", flashCards);
+    flashcards.push(...flashCards);
+  }
 
   const nextCard = () => {
     setIsFlipped(false);
@@ -137,9 +132,7 @@ export const FlashcardsPage: React.FC = () => {
           <div className="mx-auto max-w-2xl">
             <div className="relative h-80 sm:h-96">
               <div
-                className={`absolute inset-0 w-full h-full transition-transform duration-700 transform-style-preserve-3d cursor-pointer ${
-                  isFlipped ? 'rotate-y-180' : ''
-                }`}
+                className={`absolute inset-0 w-full h-full transition-transform duration-700 transform-style-preserve-3d cursor-pointer ${isFlipped ? 'rotate-y-180' : ''}`}
                 onClick={flipCard}
               >
                 {/* Front of card */}

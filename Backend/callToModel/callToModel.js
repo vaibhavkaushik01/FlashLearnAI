@@ -22,11 +22,11 @@ export async function callGoogleGemini(userPrompt){
     }
 }
 
-export async function callGoogleGeminiPassingPDF({userPrompt,filePath}) {
+export async function callGoogleGeminiPassingPDF({ userPrompt, filePath }) {
     try {
-        const ai = new GoogleGenAI({apiKey : process.env.GEMINI_API_KEY});
+        const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
         const contents = [
-            { text: userPrompt },
+            { text: `${userPrompt}\nPlease respond ONLY with valid JSON, without any extra characters, comments, or markdown formatting.` },
             {
                 inlineData: {
                     mimeType: 'application/pdf',
@@ -34,16 +34,31 @@ export async function callGoogleGeminiPassingPDF({userPrompt,filePath}) {
                 }
             }
         ];
-    
+
         const response = await ai.models.generateContent({
             model: "gemini-2.5-flash",
-            contents: contents
+            contents: contents,
+            generationConfig: {
+                responseFormat: { type: "application/json" }
+            }
         });
-    
-        return response.text;
-        
-    } catch(err){
+
+        const responseText = response?.candidates?.[0]?.content?.parts?.[0]?.text?.trim() || "";
+        try {
+            return JSON.parse(responseText);
+        } catch (err) {
+            try {
+            const { jsonrepair } = await import('jsonrepair');
+            const repaired = jsonrepair(responseText);
+            return JSON.parse(repaired);
+            } catch (repairErr) {
+            console.log("jsonrepair failed:", repairErr.message);
+            console.log("Raw response:", responseText);
+            return { error: "Invalid JSON response", raw: responseText };
+            }
+        }
+    } catch (err) {
         console.log(err.message);
-        return err.message;
+        return { error: err.message };
     }
 }

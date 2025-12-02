@@ -1,63 +1,105 @@
 import React, { useState } from 'react';
 import { Upload, File, CheckCircle, X } from 'lucide-react';
 
-export const UploadPage: React.FC = () => {
+export const UploadPage = ({ setData }) => {
   const [isDragging, setIsDragging] = useState(false);
-  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState([]);
   const [isProcessing, setIsProcessing] = useState(false);
 
-  const handleDragOver = (e: React.DragEvent) => {
+  const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragging(true);
   };
 
-  const handleDragLeave = (e: React.DragEvent) => {
+  const handleDragLeave = (e) => {
     e.preventDefault();
     setIsDragging(false);
   };
 
-  const handleDrop = (e: React.DragEvent) => {
+  const handleDrop = (e) => {
     e.preventDefault();
     setIsDragging(false);
-    
+
     const files = Array.from(e.dataTransfer.files).filter(
-      file => file.type === 'application/pdf'
+      (file) => file.type === 'application/pdf'
     );
-    
+
     if (files.length > 0) {
-      setUploadedFiles(prev => [...prev, ...files]);
+      setUploadedFiles((prev) => [...prev, ...files]);
       processFiles(files);
     }
   };
 
-  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileInput = (e) => {
     const files = Array.from(e.target.files || []).filter(
-      file => file.type === 'application/pdf'
+      (file) => file.type === 'application/pdf'
     );
-    
+
     if (files.length > 0) {
-      setUploadedFiles(prev => [...prev, ...files]);
+      setUploadedFiles((prev) => [...prev, ...files]);
       processFiles(files);
     }
   };
 
-  const processFiles = async (_files: File[]) => {
+  const processFiles = async (_files) => {
     setIsProcessing(true);
     // Simulate processing time
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    await new Promise((resolve) => setTimeout(resolve, 2000));
     setIsProcessing(false);
   };
 
-  const removeFile = (index: number) => {
-    setUploadedFiles(prev => prev.filter((_, i) => i !== index));
+  const removeFile = (index) => {
+    setUploadedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  const formatFileSize = (bytes: number) => {
+  const formatFileSize = (bytes) => {
     if (bytes === 0) return '0 Bytes';
     const k = 1024;
     const sizes = ['Bytes', 'KB', 'MB', 'GB'];
     const i = Math.floor(Math.log(bytes) / Math.log(k));
     return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+  };
+
+  const handleFileUpload = () => {
+    console.log('Files ready for processing:', uploadedFiles[0]);
+    setIsProcessing(true);
+
+    (async () => {
+      try {
+        if (!uploadedFiles || uploadedFiles.length === 0) {
+          console.warn('No files to upload');
+          return;
+        }
+
+        const file = uploadedFiles[0];
+        const formData = new FormData();
+        formData.append('File', file);
+
+        const response = await fetch('http://localhost:3000/api/generate', {
+          method: 'POST',
+          body: formData,
+        });
+
+        let result;
+        if (response.headers.get('content-type')?.includes('application/json')) {
+          result = await response.json();
+        } else {
+          result = await response.text();
+        }
+
+        console.log('Upload response:', {
+          status: response.status,
+          ok: response.ok,
+          result,
+        });
+
+        setData(result);
+      } catch (err) {
+        console.error('File upload failed:', err);
+      } finally {
+        setIsProcessing(false);
+      }
+    })();
   };
 
   return (
@@ -107,7 +149,7 @@ export const UploadPage: React.FC = () => {
               </p>
             </div>
           </div>
-          
+
           {isProcessing && (
             <div className="absolute inset-0 flex items-center justify-center">
               <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-600"></div>
@@ -152,10 +194,13 @@ export const UploadPage: React.FC = () => {
                 </div>
               ))}
             </div>
-            
+
             {uploadedFiles.length > 0 && !isProcessing && (
               <div className="mt-6 text-center">
-                <button className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300">
+                <button
+                  className="px-6 py-3 bg-gradient-to-r from-green-600 to-green-700 text-white font-semibold rounded-lg hover:shadow-lg transform hover:-translate-y-1 transition-all duration-300"
+                  onClick={handleFileUpload}
+                >
                   Process Documents
                 </button>
               </div>
@@ -167,22 +212,25 @@ export const UploadPage: React.FC = () => {
         <div className="mt-12 grid md:grid-cols-3 gap-6">
           {[
             {
-              title: "AI Summary",
-              description: "Get instant summaries of your uploaded documents",
-              icon: "📄"
+              title: 'AI Summary',
+              description: 'Get instant summaries of your uploaded documents',
+              icon: '📄',
             },
             {
-              title: "Smart Quizzes",
-              description: "Auto-generated questions to test your knowledge",
-              icon: "🧠"
+              title: 'Smart Quizzes',
+              description: 'Auto-generated questions to test your knowledge',
+              icon: '🧠',
             },
             {
-              title: "Flashcards",
-              description: "Interactive cards for quick revision",
-              icon: "⚡"
-            }
+              title: 'Flashcards',
+              description: 'Interactive cards for quick revision',
+              icon: '⚡',
+            },
           ].map((feature, index) => (
-            <div key={index} className="text-center p-6 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm">
+            <div
+              key={index}
+              className="text-center p-6 bg-white/50 dark:bg-gray-800/50 rounded-xl backdrop-blur-sm"
+            >
               <div className="text-3xl mb-3">{feature.icon}</div>
               <h3 className="font-semibold text-gray-900 dark:text-white mb-2">
                 {feature.title}

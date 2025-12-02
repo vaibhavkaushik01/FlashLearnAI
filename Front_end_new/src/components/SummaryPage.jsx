@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { BookOpen, Clock, FileText, Star } from 'lucide-react';
 
-export const SummaryPage: React.FC = () => {
+export const SummaryPage = ({textsummary}) => {
   const [selectedDocument, setSelectedDocument] = useState(0);
 
-  const mockDocuments = [
+  let mockDocuments = [
     {
       title: "Machine Learning Fundamentals",
       summary: `Machine learning is a subset of artificial intelligence that enables computers to learn and improve from experience without being explicitly programmed. Key concepts include supervised learning, unsupervised learning, and reinforcement learning.
@@ -18,7 +18,12 @@ Key topics covered:
 
 Applications include image recognition, natural language processing, recommendation systems, and predictive analytics. The field requires understanding of statistics, linear algebra, and programming.`,
       readTime: "5 min read",
-      keyPoints: ["Supervised vs Unsupervised Learning", "Neural Networks", "Deep Learning", "Feature Engineering"],
+      keyPoints: [
+        "Supervised vs Unsupervised Learning",
+        "Neural Networks",
+        "Deep Learning",
+        "Feature Engineering"
+      ],
       pages: 45
     },
     {
@@ -35,10 +40,20 @@ Essential data structures:
 
 Common algorithms include sorting (bubble, merge, quick), searching (binary search, linear search), and graph traversal (BFS, DFS). Time and space complexity analysis is crucial for optimization.`,
       readTime: "8 min read",
-      keyPoints: ["Arrays & Linked Lists", "Stacks & Queues", "Trees & Graphs", "Algorithm Complexity"],
+      keyPoints: [
+        "Arrays & Linked Lists",
+        "Stacks & Queues",
+        "Trees & Graphs",
+        "Algorithm Complexity"
+      ],
       pages: 67
     }
   ];
+
+  if(textsummary && Object.keys(textsummary).length > 0){
+    console.log("Text Summary prop:", textsummary);
+    mockDocuments.push(textsummary);
+  }
 
   const currentDoc = mockDocuments[selectedDocument];
 
@@ -71,8 +86,12 @@ Common algorithms include sorting (bubble, merge, quick), searching (binary sear
                 <div className="flex items-start space-x-3">
                   <FileText className="w-5 h-5 mt-1 flex-shrink-0" />
                   <div>
-                    <h3 className="font-medium text-sm line-clamp-2">{doc.title}</h3>
-                    <p className="text-xs opacity-70 mt-1">{doc.pages} pages</p>
+                    <h3 className="font-medium text-sm line-clamp-2">
+                      {doc.title}
+                    </h3>
+                    <p className="text-xs opacity-70 mt-1">
+                      {doc.pages} pages
+                    </p>
                   </div>
                 </div>
               </button>
@@ -116,7 +135,9 @@ Common algorithms include sorting (bubble, merge, quick), searching (binary sear
                       className="flex items-center space-x-3 p-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-gray-700 dark:to-gray-600 rounded-lg"
                     >
                       <div className="w-2 h-2 bg-gradient-to-r from-blue-600 to-purple-700 rounded-full"></div>
-                      <span className="text-gray-900 dark:text-white font-medium">{point}</span>
+                      <span className="text-gray-900 dark:text-white font-medium">
+                        {point}
+                      </span>
                     </div>
                   ))}
                 </div>
